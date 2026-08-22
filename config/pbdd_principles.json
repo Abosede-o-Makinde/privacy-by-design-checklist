@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0",
+  "article": "UK GDPR Article 25",
+  "description": "Seven privacy-by-design principles with engineer-facing scoring criteria",
+  "answer_values": {
+    "yes": 1.0,
+    "partial": 0.5,
+    "no": 0.0,
+    "n/a": null
+  },
+  "principles": [
+    {
+      "id": "p1",
+      "name": "Proactive not reactive; preventative not remedial",
+      "short_name": "Proactive",
+      "criteria": [
+        {
+          "id": "p1-review",
+          "question": "Was a privacy or threat review done before build started?",
+          "gdpr_articles": ["25"]
+        },
+        {
+          "id": "p1-high-risk",
+          "question": "Has high-risk processing been identified, and is a DPIA planned if needed?",
+          "gdpr_articles": ["25", "35"]
+        },
+        {
+          "id": "p1-before-live",
+          "question": "Are known privacy issues scheduled to be fixed before go-live, not after an incident?",
+          "gdpr_articles": ["25"]
+        }
+      ]
+    },
+    {
+      "id": "p2",
+      "name": "Privacy as the default setting",
+      "short_name": "Default",
+      "criteria": [
+        {
+          "id": "p2-optional-off",
+          "question": "Are optional features that collect extra personal data off by default?",
+          "gdpr_articles": ["25"]
+        },
+        {
+          "id": "p2-opt-in",
+          "question": "Is extra collection opt-in rather than opt-out?",
+          "gdpr_articles": ["25", "5"]
+        },
+        {
+          "id": "p2-least-privilege",
+          "question": "Do new accounts and roles start at least privilege?",
+          "gdpr_articles": ["25", "32"]
+        }
+      ]
+    },
+    {
+      "id": "p3",
+      "name": "Privacy embedded into design",
+      "short_name": "Embedded",
+      "criteria": [
+        {
+          "id": "p3-in-architecture",
+          "question": "Are privacy controls in the architecture, not only in a policy document?",
+          "gdpr_articles": ["25"]
+        },
+        {
+          "id": "p3-design-records",
+          "question": "Are privacy requirements written into the design, not added after launch?",
+          "gdpr_articles": ["25"]
+        }
+      ]
+    },
+    {
+      "id": "p4",
+      "name": "Full functionality — positive-sum, not zero-sum",
+      "short_name": "Full functionality",
+      "criteria": [
+        {
+          "id": "p4-no-false-tradeoff",
+          "question": "Can the product goal be met without dropping privacy or security controls?",
+          "gdpr_articles": ["25"]
+        },
+        {
+          "id": "p4-fallback",
+          "question": "Is there a working fallback that does not require the higher-risk data (for example badge instead of face)?",
+          "gdpr_articles": ["25", "5"]
+        }
+      ]
+    },
+    {
+      "id": "p5",
+      "name": "End-to-end security — full lifecycle protection",
+      "short_name": "Security",
+      "criteria": [
+        {
+          "id": "p5-encryption",
+          "question": "Is personal data encrypted in transit and at rest?",
+          "gdpr_articles": ["32"]
+        },
+        {
+          "id": "p5-access-control",
+          "question": "Is admin access role-based, with MFA for privileged roles?",
+          "gdpr_articles": ["32"]
+        },
+        {
+          "id": "p5-disposal",
+          "question": "Is there a defined, enforced way to delete or dispose of personal data at end of life?",
+          "gdpr_articles": ["5", "32"]
+        },
+        {
+          "id": "p5-logging",
+          "question": "Is access to sensitive personal data logged?",
+          "gdpr_articles": ["32"]
+        }
+      ]
+    },
+    {
+      "id": "p6",
+      "name": "Visibility and transparency — keep it open",
+      "short_name": "Transparency",
+      "criteria": [
+        {
+          "id": "p6-notice",
+          "question": "Is there a clear privacy notice for the people this system is about?",
+          "gdpr_articles": ["13", "14"]
+        },
+        {
+          "id": "p6-records",
+          "question": "Is this processing recorded (for example on a ROPA)?",
+          "gdpr_articles": ["30"]
+        },
+        {
+          "id": "p6-audit",
+          "question": "Can the organisation show who decided the design and what was accepted?",
+          "gdpr_articles": ["5"]
+        }
+      ]
+    },
+    {
+      "id": "p7",
+      "name": "Respect for user privacy — keep it user-centric",
+      "short_name": "User-centric",
+      "criteria": [
+        {
+          "id": "p7-rights",
+          "question": "Is there a way to handle access, erasure, and similar rights for this data?",
+          "gdpr_articles": ["15", "17"]
+        },
+        {
+          "id": "p7-human-review",
+          "question": "If the system makes a significant decision about someone, can a human review it?",
+          "gdpr_articles": ["22"]
+        },
+        {
+          "id": "p7-choice",
+          "question": "Can the person use the system without the higher-risk option (for example badge only)?",
+          "gdpr_articles": ["25"]
+        }
+      ]
+    }
+  ]
+}

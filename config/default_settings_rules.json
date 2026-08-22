@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "article": "UK GDPR Article 25(2)",
+  "description": "Privacy-by-default checks: only personal data necessary for each purpose, by default",
+  "answer_values": {
+    "yes": 1.0,
+    "partial": 0.5,
+    "no": 0.0,
+    "n/a": null
+  },
+  "gate": "If any rule is no, overall assessment cannot be PASS",
+  "rules": [
+    {
+      "id": "amount",
+      "label": "Amount of personal data collected",
+      "question": "By default, does the system collect only the personal data needed for its stated purpose?",
+      "pass_example": "Staff ID and door events only",
+      "fail_example": "Face template captured on first use without a separate opt-in"
+    },
+    {
+      "id": "extent",
+      "label": "Extent of processing",
+      "question": "By default, is processing limited to that purpose (no extra matching, profiling, or sharing)?",
+      "pass_example": "Match against enrolled staff only, at the door, at the time of entry",
+      "fail_example": "Continuous identification of all people in camera view, including visitors"
+    },
+    {
+      "id": "storage",
+      "label": "Period of storage",
+      "question": "By default, is a retention period set and enforced?",
+      "pass_example": "Door logs kept 90 days; biometric templates deleted when staff leave",
+      "fail_example": "Face data kept indefinitely with no deletion job"
+    },
+    {
+      "id": "accessibility",
+      "label": "Accessibility",
+      "question": "By default, can only people who need it access the personal data?",
+      "pass_example": "Role-based access; MFA for anyone who can export templates",
+      "fail_example": "Any operator can export face templates from the admin screen"
+    }
+  ]
+}
