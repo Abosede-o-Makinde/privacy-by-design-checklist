@@ -1,0 +1,15 @@
+[project]
+name = "privacy-by-design-checklist"
+version = "0.1.0"
+description = "Article 25 compliance tool — scores system designs against privacy-by-design principles"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*"]
