@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from click.testing import CliRunner
@@ -9,7 +10,7 @@ from click.testing import CliRunner
 from main import cli
 
 ROOT = Path(__file__).resolve().parents[1]
-SAMPLE = ROOT / "sample_data" / "staff_access.json"
+SAMPLE = ROOT / "sample_data" / "meeting_notetaker.json"
 
 
 class TestCli:
@@ -32,7 +33,7 @@ class TestCli:
             ["--mode", "checklist", "--input", str(local), "--output", str(out)],
         )
         assert result.exit_code == 0, result.output
-        checklist = out / "STAFF-ACCESS-001_checklist.md"
+        checklist = out / "MEETING-NOTES-001_checklist.md"
         assert checklist.is_file()
         text = checklist.read_text(encoding="utf-8")
         assert "Go-live checklist" in text
@@ -49,8 +50,8 @@ class TestCli:
             ["--mode", "report", "--input", str(local), "--output", str(out)],
         )
         assert result.exit_code == 0, result.output
-        assert (out / "STAFF-ACCESS-001_checklist.md").is_file()
-        pdf = out / "STAFF-ACCESS-001_assessment.pdf"
+        assert (out / "MEETING-NOTES-001_checklist.md").is_file()
+        pdf = out / "MEETING-NOTES-001_assessment.pdf"
         assert pdf.is_file()
         assert pdf.stat().st_size > 500
 
@@ -63,3 +64,27 @@ class TestCli:
         )
         assert result.exit_code == 1
         assert "Error" in result.output
+
+    def test_unsafe_system_id_sanitised_in_filename(
+        self, tmp_path: Path, monkeypatch
+    ) -> None:
+        monkeypatch.chdir(tmp_path)
+        payload = json.loads(SAMPLE.read_text(encoding="utf-8"))
+        payload["system_id"] = "../evil/path"
+        payload["description"] = "AI notes for internal staff meetings"
+        payload["notes"] = "Recording on by default; retention not set"
+        local = Path("sample.json")
+        local.write_text(json.dumps(payload), encoding="utf-8")
+        out = Path("out")
+        runner = CliRunner()
+        result = runner.invoke(
+            cli,
+            ["--mode", "checklist", "--input", str(local), "--output", str(out)],
+        )
+        assert result.exit_code == 0, result.output
+        checklist = out / ".._evil_path_checklist.md"
+        assert checklist.is_file()
+        assert not (tmp_path / "evil").exists()
+        text = checklist.read_text(encoding="utf-8")
+        assert "AI notes for internal staff meetings" in text
+        assert "Recording on by default; retention not set" in text

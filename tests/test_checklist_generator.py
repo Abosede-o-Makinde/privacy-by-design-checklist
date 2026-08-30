@@ -54,10 +54,10 @@ class TestChecklistGenerator:
         ]
         assert ids == ["storage", "extent"]
 
-    def test_staff_access_order_is_stable(
-        self, staff_access_profile: SystemProfile
+    def test_meeting_notetaker_order_is_stable(
+        self, meeting_notetaker_profile: SystemProfile
     ) -> None:
-        result = ChecklistGenerator().generate(staff_access_profile)
+        result = ChecklistGenerator().generate(meeting_notetaker_profile)
         ids = [item.item_id for item in result.items]
         assert ids[:4] == ["amount", "storage", "extent", "accessibility"]
         assert ids[4:6] == ["p5-disposal", "p5-access-control"]

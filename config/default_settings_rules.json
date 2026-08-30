@@ -14,29 +14,29 @@
       "id": "amount",
       "label": "Amount of personal data collected",
       "question": "By default, does the system collect only the personal data needed for its stated purpose?",
-      "pass_example": "Staff ID and door events only",
-      "fail_example": "Face template captured on first use without a separate opt-in"
+      "pass_example": "Meeting title, attendees, and agreed action items only",
+      "fail_example": "Full audio and transcript stored for every call without a separate opt-in"
     },
     {
       "id": "extent",
       "label": "Extent of processing",
       "question": "By default, is processing limited to that purpose (no extra matching, profiling, or sharing)?",
-      "pass_example": "Match against enrolled staff only, at the door, at the time of entry",
-      "fail_example": "Continuous identification of all people in camera view, including visitors"
+      "pass_example": "Transcript used only to produce notes for that meeting's attendees",
+      "fail_example": "Transcripts reused for performance scoring or shared with vendors by default"
     },
     {
       "id": "storage",
       "label": "Period of storage",
       "question": "By default, is a retention period set and enforced?",
-      "pass_example": "Door logs kept 90 days; biometric templates deleted when staff leave",
-      "fail_example": "Face data kept indefinitely with no deletion job"
+      "pass_example": "Audio deleted after 30 days; transcripts kept 90 days then purged",
+      "fail_example": "Audio and transcripts kept indefinitely with no deletion job"
     },
     {
       "id": "accessibility",
       "label": "Accessibility",
       "question": "By default, can only people who need it access the personal data?",
-      "pass_example": "Role-based access; MFA for anyone who can export templates",
-      "fail_example": "Any operator can export face templates from the admin screen"
+      "pass_example": "Role-based access; MFA for anyone who can export transcripts",
+      "fail_example": "Any operator can export all meeting transcripts from the admin screen"
     }
   ]
 }

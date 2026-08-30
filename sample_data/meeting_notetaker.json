@@ -1,8 +1,8 @@
 {
-  "system_id": "STAFF-ACCESS-001",
-  "name": "Staff building access with optional facial recognition",
-  "description": "Existing badge access at office turnstiles. A proposal adds optional facial recognition so staff can enter without tapping a badge.",
-  "purpose": "Control staff entry to office buildings",
+  "system_id": "MEETING-NOTES-001",
+  "name": "AI meeting notetaker for internal calls",
+  "description": "Proposed tool that records meetings, generates transcripts, and stores action items for a professional-services firm.",
+  "purpose": "Capture meeting notes and follow-ups for internal staff calls",
   "organisation": "Example Professional Services Ltd",
   "answers": {
     "p1-review": "yes",
@@ -32,5 +32,5 @@
     "storage": "no",
     "accessibility": "partial"
   },
-  "notes": "Face capture is on at first use. Badge still works. No retention job for templates. DPIA started but not finished. Admin export is shared-password today."
+  "notes": "Recording and transcript storage are on for every call by default. No retention job for audio or transcripts. DPIA started but not finished. Admin export uses a shared password today. People can still take typed notes without the AI tool."
 }

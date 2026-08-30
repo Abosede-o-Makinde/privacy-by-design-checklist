@@ -26,7 +26,7 @@ class RuleResult:
 class DefaultCheckResult:
     system_id: str
     rule_results: list[RuleResult]
-    overall_score: float
+    overall_score: float | None
     blocks_pass: bool
 
 
@@ -42,7 +42,8 @@ class DefaultChecker:
             for rule in self.questionnaire.default_rules
         ]
         counted = [item.score for item in results if item.score is not None]
-        overall = round(sum(counted) / len(counted), 1) if counted else 0.0
+        # All n/a → no score (do not show a fake 0/100).
+        overall = round(sum(counted) / len(counted), 1) if counted else None
         blocks_pass = any(item.blocks_pass for item in results)
         return DefaultCheckResult(
             system_id=profile.system_id,

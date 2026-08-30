@@ -15,7 +15,12 @@ from rich.panel import Panel
 from rich.table import Table
 
 from src import __version__
-from src.checker.assessment import Assessment, AssessmentRunner
+from src.checker.assessment import (
+    Assessment,
+    AssessmentRunner,
+    format_score,
+    safe_output_stem,
+)
 from src.checker.questionnaire import Questionnaire, QuestionnaireError
 from src.reporter.markdown_checklist import MarkdownChecklistWriter
 from src.reporter.pdf_report import PrivacyByDesignReport
@@ -32,6 +37,7 @@ def _load_profile(input_path: Path | None):
 
 
 def _print_assessment(assessment: Assessment) -> None:
+    profile = assessment.profile
     table = Table(title="Principle scores")
     table.add_column("Principle")
     table.add_column("Score")
@@ -54,17 +60,19 @@ def _print_assessment(assessment: Assessment) -> None:
     console.print(defaults)
 
     gate = "yes — PASS blocked" if assessment.blocks_pass else "no"
-    console.print(
-        Panel(
-            f"System: [bold]{assessment.profile.name}[/bold]\n"
-            f"Principle score: [bold]{assessment.principle_score}/100[/bold]\n"
-            f"Default score: [bold]{assessment.default_score}/100[/bold]\n"
-            f"Band: [bold]{assessment.band}[/bold]\n"
-            f"Art. 25(2) gate: {gate}\n"
-            f"Open checklist items: {len(assessment.checklist.items)}",
-            title="Assessment summary",
-        )
+    summary = (
+        f"System: [bold]{profile.name}[/bold]\n"
+        f"Principle score: [bold]{format_score(assessment.principle_score)}[/bold]\n"
+        f"Default score: [bold]{format_score(assessment.default_score)}[/bold]\n"
+        f"Band: [bold]{assessment.band}[/bold]\n"
+        f"Art. 25(2) gate: {gate}\n"
+        f"Open checklist items: {len(assessment.checklist.items)}"
     )
+    if profile.description:
+        summary += f"\nDescription: {profile.description}"
+    if profile.notes:
+        summary += f"\nNotes: {profile.notes}"
+    console.print(Panel(summary, title="Assessment summary"))
 
 
 def _print_checklist(assessment: Assessment) -> None:
@@ -100,7 +108,8 @@ def _run_checklist(input_path: Path | None, output_dir: Path) -> Assessment:
     _print_checklist(assessment)
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    checklist_path = output_dir / f"{assessment.profile.system_id}_checklist.md"
+    stem = safe_output_stem(assessment.profile.system_id)
+    checklist_path = output_dir / f"{stem}_checklist.md"
     MarkdownChecklistWriter().write(assessment, checklist_path)
     console.print(Panel(f"Checklist written to {checklist_path}", title="Checklist export"))
     return assessment
@@ -109,7 +118,8 @@ def _run_checklist(input_path: Path | None, output_dir: Path) -> Assessment:
 def _run_report(input_path: Path | None, output_dir: Path) -> Assessment:
     assessment = _run_checklist(input_path, output_dir)
     output_dir = Path(output_dir)
-    pdf_path = output_dir / f"{assessment.profile.system_id}_assessment.pdf"
+    stem = safe_output_stem(assessment.profile.system_id)
+    pdf_path = output_dir / f"{stem}_assessment.pdf"
     PrivacyByDesignReport().generate(assessment, pdf_path)
     console.print(Panel(f"PDF written to {pdf_path}", title="Report export"))
     return assessment

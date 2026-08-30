@@ -8,7 +8,7 @@ from pathlib import Path
 from fpdf import FPDF
 
 from src import __version__
-from src.checker.assessment import Assessment
+from src.checker.assessment import Assessment, format_score
 
 
 class Colour:
@@ -83,9 +83,13 @@ class PrivacyByDesignReport:
             self._row(pdf, "Organisation", profile.organisation)
         if profile.purpose:
             self._row(pdf, "Purpose", profile.purpose)
+        if profile.description:
+            self._row(pdf, "Description", profile.description)
         self._row(pdf, "Generated (UTC)", datetime.now(UTC).strftime("%Y-%m-%d %H:%M"))
-        self._row(pdf, "Principle score", f"{assessment.principle_score}/100")
-        self._row(pdf, "Default score", f"{assessment.default_score}/100")
+        self._row(pdf, "Principle score", format_score(assessment.principle_score))
+        self._row(pdf, "Default score", format_score(assessment.default_score))
+        if profile.notes:
+            self._row(pdf, "Notes", profile.notes)
 
         colour = {
             "PASS": Colour.PASS,

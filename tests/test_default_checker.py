@@ -42,10 +42,16 @@ class TestDefaultChecker:
         assert extent.score is None
         assert result.overall_score == 100.0
 
-    def test_staff_access_sample_blocks_pass(
-        self, staff_access_profile: SystemProfile
+    def test_all_na_overall_is_none(self, questionnaire: Questionnaire) -> None:
+        result = DefaultChecker(questionnaire).check(_fill(questionnaire, "n/a"))
+        assert result.overall_score is None
+        assert result.blocks_pass is False
+        assert all(item.score is None for item in result.rule_results)
+
+    def test_meeting_notetaker_sample_blocks_pass(
+        self, meeting_notetaker_profile: SystemProfile
     ) -> None:
-        result = DefaultChecker().check(staff_access_profile)
+        result = DefaultChecker().check(meeting_notetaker_profile)
         assert result.blocks_pass is True
         by_id = {item.rule_id: item.score for item in result.rule_results}
         assert by_id["amount"] == 0.0

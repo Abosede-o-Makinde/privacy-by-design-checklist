@@ -17,5 +17,5 @@ def questionnaire() -> Questionnaire:
 
 
 @pytest.fixture
-def staff_access_profile(questionnaire: Questionnaire) -> SystemProfile:
-    return questionnaire.from_json(ROOT / "sample_data" / "staff_access.json")
+def meeting_notetaker_profile(questionnaire: Questionnaire) -> SystemProfile:
+    return questionnaire.from_json(ROOT / "sample_data" / "meeting_notetaker.json")

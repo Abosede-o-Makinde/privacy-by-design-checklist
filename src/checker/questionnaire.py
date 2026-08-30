@@ -65,11 +65,16 @@ def _read_json(path: Path) -> dict:
 
 
 def _require_answer(value: object, key: str) -> str:
-    if not isinstance(value, str) or value not in ALLOWED_ANSWERS:
+    if not isinstance(value, str):
         raise QuestionnaireError(
             f"Answer for '{key}' must be one of: {', '.join(sorted(ALLOWED_ANSWERS))}"
         )
-    return value
+    normalised = value.strip().lower()
+    if normalised not in ALLOWED_ANSWERS:
+        raise QuestionnaireError(
+            f"Answer for '{key}' must be one of: {', '.join(sorted(ALLOWED_ANSWERS))}"
+        )
+    return normalised
 
 
 class Questionnaire:
@@ -89,35 +94,47 @@ class Questionnaire:
     def _load_principles(self) -> list[Principle]:
         data = _read_json(self.config_dir / "pbdd_principles.json")
         principles: list[Principle] = []
-        for item in data.get("principles", []):
-            criteria = [
-                Criterion(
-                    id=row["id"],
-                    question=row["question"],
-                    gdpr_articles=list(row.get("gdpr_articles", [])),
+        try:
+            for item in data.get("principles", []):
+                criteria = [
+                    Criterion(
+                        id=row["id"],
+                        question=row["question"],
+                        gdpr_articles=list(row.get("gdpr_articles", [])),
+                    )
+                    for row in item.get("criteria", [])
+                ]
+                if not criteria:
+                    raise QuestionnaireError(
+                        f"Principle '{item.get('id')}' has no criteria"
+                    )
+                principles.append(
+                    Principle(
+                        id=item["id"],
+                        name=item["name"],
+                        short_name=item.get("short_name", item["name"]),
+                        criteria=criteria,
+                    )
                 )
-                for row in item.get("criteria", [])
-            ]
-            if not criteria:
-                raise QuestionnaireError(f"Principle '{item.get('id')}' has no criteria")
-            principles.append(
-                Principle(
-                    id=item["id"],
-                    name=item["name"],
-                    short_name=item.get("short_name", item["name"]),
-                    criteria=criteria,
-                )
-            )
+        except (KeyError, TypeError) as exc:
+            raise QuestionnaireError(
+                f"Invalid pbdd_principles.json structure: {exc}"
+            ) from exc
         if len(principles) != 7:
             raise QuestionnaireError("pbdd_principles.json must define seven principles")
         return principles
 
     def _load_default_rules(self) -> list[DefaultRule]:
         data = _read_json(self.config_dir / "default_settings_rules.json")
-        rules = [
-            DefaultRule(id=row["id"], label=row["label"], question=row["question"])
-            for row in data.get("rules", [])
-        ]
+        try:
+            rules = [
+                DefaultRule(id=row["id"], label=row["label"], question=row["question"])
+                for row in data.get("rules", [])
+            ]
+        except (KeyError, TypeError) as exc:
+            raise QuestionnaireError(
+                f"Invalid default_settings_rules.json structure: {exc}"
+            ) from exc
         if not rules:
             raise QuestionnaireError("default_settings_rules.json has no rules")
         return rules

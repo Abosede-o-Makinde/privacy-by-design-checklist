@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.checker.assessment import Assessment
+from src.checker.assessment import Assessment, format_score
 
 
 class MarkdownChecklistWriter:
@@ -13,16 +13,21 @@ class MarkdownChecklistWriter:
     def write(self, assessment: Assessment, output_path: Path) -> Path:
         target = Path(output_path)
         target.parent.mkdir(parents=True, exist_ok=True)
+        profile = assessment.profile
         lines = [
-            f"# Go-live checklist: {assessment.profile.name}",
+            f"# Go-live checklist: {profile.name}",
             "",
-            f"- System ID: `{assessment.profile.system_id}`",
-            f"- Principle score: **{assessment.principle_score}/100**",
-            f"- Default score: **{assessment.default_score}/100**",
+            f"- System ID: `{profile.system_id}`",
+            f"- Principle score: **{format_score(assessment.principle_score)}**",
+            f"- Default score: **{format_score(assessment.default_score)}**",
             f"- Band: **{assessment.band}**",
             f"- Art. 25(2) blocks PASS: **{'yes' if assessment.blocks_pass else 'no'}**",
             "",
         ]
+        if profile.description:
+            lines.extend([f"**Description:** {profile.description}", ""])
+        if profile.notes:
+            lines.extend([f"**Notes:** {profile.notes}", ""])
         if not assessment.checklist.items:
             lines.extend(
                 [

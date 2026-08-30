@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 from src.checker.checklist_generator import Checklist, ChecklistGenerator
@@ -17,21 +18,35 @@ class Assessment:
     defaults: DefaultCheckResult
     checklist: Checklist
     band: str
-    principle_score: float
-    default_score: float
+    principle_score: float | None
+    default_score: float | None
     blocks_pass: bool
 
 
-def band_for(score: float, blocks_pass: bool) -> str:
+def band_for(score: float | None, blocks_pass: bool) -> str:
     """Map a 0-100 score to FAIL / PARTIAL / PASS.
 
     Any Article 25(2) ``no`` answer blocks PASS even when the score is high.
+    If every principle answer is n/a, there is no score — treat as PARTIAL.
     """
+    if score is None:
+        return "PARTIAL"
     if score < 50:
         return "FAIL"
     if blocks_pass or score < 80:
         return "PARTIAL"
     return "PASS"
+
+
+def format_score(score: float | None) -> str:
+    """Human-readable score for CLI, markdown, and PDF."""
+    return "n/a" if score is None else f"{score}/100"
+
+
+def safe_output_stem(system_id: str) -> str:
+    """Keep filenames inside the output directory."""
+    cleaned = re.sub(r"[^A-Za-z0-9._-]+", "_", system_id.strip())
+    return cleaned or "system"
 
 
 class AssessmentRunner:

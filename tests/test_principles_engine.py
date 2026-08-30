@@ -50,8 +50,15 @@ class TestPrinciplesEngine:
         assert first.score is None
         assert result.overall_score == 100.0
 
-    def test_staff_access_sample_is_mixed(self, staff_access_profile: SystemProfile) -> None:
-        result = PrinciplesEngine().score(staff_access_profile)
+    def test_all_na_overall_is_none(self, questionnaire: Questionnaire) -> None:
+        result = PrinciplesEngine(questionnaire).score(_fill(questionnaire, "n/a"))
+        assert result.overall_score is None
+        assert all(item.score is None for item in result.principle_scores)
+
+    def test_meeting_notetaker_sample_is_mixed(
+        self, meeting_notetaker_profile: SystemProfile
+    ) -> None:
+        result = PrinciplesEngine().score(meeting_notetaker_profile)
         by_id = {item.principle_id: item.score for item in result.principle_scores}
         assert by_id["p1"] == 83.3
         assert by_id["p2"] == 33.3

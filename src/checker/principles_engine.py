@@ -28,7 +28,7 @@ class PrinciplesResult:
     system_id: str
     system_name: str
     principle_scores: list[PrincipleScore]
-    overall_score: float
+    overall_score: float | None
 
 
 class PrinciplesEngine:
@@ -43,7 +43,8 @@ class PrinciplesEngine:
             for principle in self.questionnaire.principles
         ]
         counted = [item.score for item in principle_scores if item.score is not None]
-        overall = round(sum(counted) / len(counted), 1) if counted else 0.0
+        # All n/a → no score (do not treat as 0 / FAIL).
+        overall = round(sum(counted) / len(counted), 1) if counted else None
         return PrinciplesResult(
             system_id=profile.system_id,
             system_name=profile.name,
