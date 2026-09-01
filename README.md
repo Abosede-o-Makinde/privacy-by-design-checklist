@@ -1,6 +1,7 @@
 # privacy-by-design-checklist
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GDPR Art. 25](https://img.shields.io/badge/GDPR-Art.%2025-important)](docs/PRIVACY_BY_DESIGN_GUIDE.md)
 
 Article 25 compliance tool — scores a new system design against privacy-by-design principles and privacy-by-default rules, then prints an engineer go-live checklist and PDF.
@@ -80,6 +81,8 @@ The checklist prioritises defaults first — for example collect only what the p
 
 ### Sample output (Markdown excerpt)
 
+Pre-generated artefacts: [`sample_outputs/`](sample_outputs/)
+
 ```text
 Band: PARTIAL
 Art. 25(2) blocks PASS: yes
@@ -109,6 +112,7 @@ privacy-by-design-checklist/
 ├── src/reporter/         # Markdown and PDF export
 ├── config/               # principle and default rule JSON
 ├── sample_data/          # meeting_notetaker.json
+├── sample_outputs/       # committed demo checklist and PDF
 ├── docs/                 # Article 25 guide
 └── tests/
 ```
